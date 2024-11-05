@@ -1,0 +1,7 @@
+<div>
+  <button (click)="toggleListening()">
+    {{ isListening ? 'Stop Listening' : 'Start Listening' }}
+  </button>
+  <p>{{ transcript }}</p>
+  <button (click)="processCommand()" [disabled]="!transcript">Process Command</button>
+</div>
