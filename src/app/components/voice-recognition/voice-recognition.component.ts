@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SpeechRecognitionService } from '../../services/speech-recognition.service';
 import { HttpClient } from '@angular/common/http';
 
@@ -7,12 +7,19 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './voice-recognition.component.html',
   styleUrls: ['./voice-recognition.component.css']
 })
-export class VoiceRecognitionComponent {
+export class VoiceRecognitionComponent implements OnInit {
   isListening: boolean = false;
   transcript: string = '';
-  apiUrl = ''; // Replace with your actual API URL
+  apiUrl = 'https://your-api-url/api/voicecommand/process'; // Replace with your API URL
 
-  constructor(private speechService: SpeechRecognitionService, private http: HttpClient) { }
+  constructor(private speechService: SpeechRecognitionService, private http: HttpClient) {}
+
+  ngOnInit() {
+    // Subscribe to transcript updates
+    this.speechService.transcript$.subscribe((text: string) => {
+      this.transcript = text;
+    });
+  }
 
   toggleListening() {
     this.isListening = !this.isListening;
@@ -21,13 +28,6 @@ export class VoiceRecognitionComponent {
     } else {
       this.speechService.stopListening();
     }
-  }
-
-  ngDoCheck() {
-    console.log("ngDoCheck")
-    var interimTranscript = this.speechService.getTranscript()
-    if (interimTranscript != null && interimTranscript != "")
-      this.transcript = interimTranscript;
   }
 
   processCommand() {
